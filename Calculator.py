@@ -11,12 +11,12 @@ class CalcDisplay(ttk.Frame):
     def __init__(self, parent, **kwargs):
         ttk.Frame.__init__(self, parent, height=50, width=272)
 
-        self.pack_propagate(0)
+        self.pack_propagate(0) #los componentes hijos no controlan su tamaño si se pone True o 1
 
         s = ttk.Style()
         s.configure("my.TLabel", font="Helvetica 42")
 
-        self.lblDisplay = ttk.Label(self, text="0", style="my.TLabel", anchor=E)
+        self.lblDisplay = ttk.Label(self, text="0", style="my.TLabel", anchor=E, foreground="white", background="black")
         self.lblDisplay.pack(fill=BOTH, expand=True)
 
 
