@@ -11,13 +11,15 @@ class CalcDisplay(ttk.Frame):
     def __init__(self, parent, **kwargs):
         ttk.Frame.__init__(self, parent, height=50, width=272)
 
-        self.pack_propagate(0) #los componentes hijos no controlan su tamaño si se pone True o 1
+        self.pack_propagate(0) #los componentes hijos controlan su tamaño si se pone "0", pero con  "True" o "1" pasan a tener el control standar anulando el estilo. 
 
         s = ttk.Style()
         s.configure("my.TLabel", font="Helvetica 42")
 
         self.lblDisplay = ttk.Label(self, text="0", style="my.TLabel", anchor=E, foreground="white", background="black")
-        self.lblDisplay.pack(fill=BOTH, expand=True)
+        self.lblDisplay.pack(fill=BOTH, expand=True)   #rellenar y expandir
+
+        #Tambien se puede utilizar s.theme_use() y dentro del paréntesis poner uno de los siguientes 'aqua, clam, alt, default, classic'
 
 
 class CalcButton(ttk.Frame):
@@ -68,7 +70,7 @@ class MainApp(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.title("Calculator")
-        self.geometry("{}x{}".format(_widthBtn*4, _heightBtn*6))
+        self.geometry("{}x{}".format(_widthBtn*4, _heightBtn*6))   #en el geometry() se puede poner la ubicación, ej: geometry() "200x300+0+10" donde x= 0, y=10
 
         self.calculator = Calculator(self, height=_heightBtn*6, width=_widthBtn*4)
         self.calculator.place(x=0, y=0)
