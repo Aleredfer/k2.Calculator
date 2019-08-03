@@ -26,12 +26,22 @@ class CalcDisplay(ttk.Frame):
         #Tambien se puede utilizar s.theme_use() y dentro del paréntesis poner uno de los siguientes 'aqua, clam, alt, default, classic'
 
     def addDigit(self, digito):    #añade digito
-        if  self._value[0] != '-' and len(self._value) >= 10 or len(self._value) >= 11:  # quiere decir: si distinto de '-' y >= 10   o   igual a '-' y >= 11 
+        if len(self._value) >= 12 or \
+            (len(self._value) >= 11 and (self._value[0] != '-' or '.' not in self._value)) or \
+            (len(self._value) >= 10 and self._value[0] != '-' and '.' not in self._value): 
             return
+        
+        # lo pone en != y es un lio, 12= con '.' y con '-'
+        #11 = o no contiene'.' o no tiene'-'
+        #10 = no tiene ni '-' ni contiene '.'
+
+        if '.' in self._value and digito == '.':   #el ann digito == '.' es lo último que has pulsada, un PUNTO.
+                return
+
         '''
-        if len(self._value) == 11 or self._value[0] == '-' and len(self._value) == 10:
+        if  self._value[0] != '-' and len(self._value) >= 10 or len(self._value) >= 11:  
             return'''
-      
+
         #O también:
         
         '''
@@ -43,7 +53,7 @@ class CalcDisplay(ttk.Frame):
             return
         '''    
 
-        if self._value == '0':    #el if es para que empiece en cero pero se olvide de el al meter un digito nuevo.
+        if self._value == '0' and digito != '.':    
             self._value= digito
         else:
             self._value += digito
@@ -118,15 +128,16 @@ class Calculator(ttk.Frame):
         CalcButton(self, text="9", command=lambda: self.addDigit('9')).grid(column=2, row=2)
         
         CalcButton(self, text="C", command=self.reset).grid(column=0, row=1) #no pone display, solo con reset es suficiente.
-        CalcButton(self, text="+/-", command=self.display.signo).grid(column=1, row=1)
-        CalcButton(self, text="%", command=lambda: self.display.addDigit('%')).grid(column=2, row=1)
+        CalcButton(self, text="CE", command=self.reset).grid(column=1, row=1)
+        CalcButton(self, text="+/-", command=self.display.signo).grid(column=2, row=1)
+        
         CalcButton(self, text="/", command=lambda: self.opera('/')).grid(column=3, row=1)
 
         CalcButton(self, text="X", command=lambda: self.opera('X')).grid(column=3, row=2) #Aquí pasa igual, no pone display, ya va dentro de la función
         CalcButton(self, text="-", command=lambda: self.opera('-')).grid(column=3, row=3)
         CalcButton(self, text="+", command=lambda: self.opera('+')).grid(column=3, row=4)
         CalcButton(self, text="=", command=lambda: self.opera('=')).grid(column=3, row=5)
-        CalcButton(self, text=".", command=lambda: self.display.addDigit(',')).grid(column=2, row=5)
+        CalcButton(self, text=".", command=lambda: self.display.addDigit('.')).grid(column=2, row=5)
 
     def addDigit(self, digito):
         if self.swBorrado:
@@ -168,8 +179,9 @@ class Calculator(ttk.Frame):
             if operador != '=':
                 self._operador = operador   #guardo el operador que será '=' en _operador
                 self._op2 = None            #dejo _op2 en None
-
-            resultado = str(resultado)
+            
+            resultado = str(round(resultado, 9))
+            #resultado = "{:.9f}".format(resultado)
             self.display._value = resultado
             self.display.pintar()
 
